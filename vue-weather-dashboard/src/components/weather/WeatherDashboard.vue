@@ -1,5 +1,8 @@
 <script setup>
 import { computed, ref, watch, watchEffect } from 'vue'
+import BaseDashboardCard from './BaseDashboardCard.vue'
+import SearchBar from './SearchBar.vue'
+import WeatherCard from './WeatherCard.vue'
 
 const weatherList = ref([
   { id: 'city_01', name: '서울', temp: 28, status: '맑음'},
@@ -29,44 +32,32 @@ watchEffect(() => {
   console.log('[watchEffect] 검색어:', searchQuery.value)
 })
 
-function showDetail(cityName, status) {
-  window.alert(`${cityName}의 현재 날씨는 [${status}] 상태입니다.`)
+function showDetail(cityId) {
+  window.alert(`${cityId} 상세 화면은 Router 단계에서 연결합니다.`)
 }
 </script>
 
 <template>
   <div class="dashboard-wrapper">
-    <section class="search-box">
-      <h2>🔍 도시 검색</h2>
-      <input type="text"
-        :value="searchQuery"
-        placeholder="검색할 도시 이름 입력"
-        @input="searchQuery = $event.target.value" />
-      <p>검색 중인 도시: <strong>{{ searchQuery }}</strong></p>
+    <BaseDashboardCard>
+      <template #title><h2>🔍 도시 검색</h2></template>
+      <SearchBar
+        :current-query="searchQuery"
+        @update-query="(value) => (searchQuery = value)"
+      />
+    </BaseDashboardCard>
+
+    <BaseDashboardCard>
+      <template #title><h2>🏙️ 지역별 날씨 현황</h2></template>
+      <WeatherCard
+        v-for="city in filteredWeatherList"
+        :key="city.id"
+        :city-item="city"
+        @select-card="(message) => (selectedCityInfo = message)"
+        @click-detail="showDetail"
+      />
       <p v-if="filteredWeatherList.length === 0">검색 결과가 없습니다.</p>
-    </section>
-
-    <section class="list-bax">
-      <h2>🏙️ 지역별 날씨 현황</h2>
-
-      <article
-        v-for="item in filteredWeatherList"
-        :key="item.id"
-        class="weather-card"
-        @click="selectedCityInfo = `${item.name}이 선택되었습니다.`">
-
-        <div class="weather-card-top">
-          <h3 class="weather-card-title">{{ item.name }} ({{ item.status }})</h3>
-
-          <button @click.stop="showDetail(item.name, item.status)">상세보기</button>
-        </div>
-
-        <p>현재 기온: {{ item.temp }}°C</p>
-
-        <span v-if="item.temp >= 25" class="weather-hot">🔥 더움 (25도 이상)</span>
-        <span v-else class="weather-cool">❄️신선함 (25도 미만)</span>
-      </article>
-    </section>
+    </BaseDashboardCard>
 
     <p class="status-bar">{{ selectedCityInfo }}</p>
   </div>
