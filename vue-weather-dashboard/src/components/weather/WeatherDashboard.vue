@@ -16,6 +16,7 @@ const searchQuery = ref('')
 const showFavoritesOnly = ref(false)
 const selectedCityInfo = ref('카드를 클릭하거나 검색해보세요.')
 const favoriteStore = useFavoriteStore()
+let searchSyncTimer = null
 
 const router = useRouter()
 const route = useRoute()
@@ -40,9 +41,14 @@ watch(selectedCityInfo, (newInfo) => {
 
 // 검색 상태를 URL query string에 보존
 watch(searchQuery, (value) => {
-  router.replace({
-    query: { ...route.query, search: value || undefined },
-  })
+  // 한글 IME 조합 중에는 라우트 갱신이 입력을 끊을 수 있어서
+  // 아주 짧게 지연시킨 뒤 URL 동기화
+  window.clearTimeout(searchSyncTimer)
+  searchSyncTimer = window.setTimeout(() => {
+    router.replace({
+      query: { ...route.query, search: value || undefined },
+    })
+  }, 120)
 })
 
 

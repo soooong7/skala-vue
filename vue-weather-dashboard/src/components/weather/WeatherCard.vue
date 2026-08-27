@@ -36,9 +36,9 @@ const { displayTemp, unitSymbol } = useTemperature(() => props.cityItem.temp)
     <span v-if="props.cityItem.temp >= 25" class="weather-hot">🔥 더움 (25도 이상)</span>
     <span v-else class="weather-cool">❄️선선함 (25도 미만)</span>
 
-    <button class="detail-button" @click.stop="emit('click-detail', props.cityItem.id)">
-      상세보기
-    </button>
+    <el-button
+      type="primary"
+      @click.stop="emit('click-detail', props.cityItem.id)">상세보기</el-button>
   </article>
 </template>
 
