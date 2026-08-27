@@ -1,9 +1,11 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useFavoriteStore } from '@/stores/favoriteStore'
 
 const route = useRoute()
 const router = useRouter()
+const favoriteStore = useFavoriteStore()
 const cityData = ref(null)
 
 const mockDetails = {
@@ -27,6 +29,9 @@ onMounted(() => {
       <p>날씨: {{ cityData.status }}</p>
       <p>습도: {{ cityData.humidity }}%</p>
       <p>풍속: {{ cityData.wind }}m/s</p>
+      <button @click="favoriteStore.toggleFavorite(String(route.params.cityId))">
+        {{ favoriteStore.isFavorite(String(route.params.cityId)) ? '즐겨찾기 해제' : '즐겨찾기 추가' }}
+      </button>
     </div>
     <button @click="router.push('/')">홈으로 돌아가기</button>
   </section>
