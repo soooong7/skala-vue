@@ -1,11 +1,21 @@
 <script setup>
-import WeatherDashboard from './components/weather/WeatherDashboard.vue';
+import { provide } from 'vue'
+import { RouterLink, RouterView } from 'vue-router'
+
+provide('appTitle', 'Vue Weather Dashboard')
 </script>
 
 <template>
-  <main class="app-contatiner">
-    <h1>Vue Weather Dashboard</h1>
-    <WeatherDashboard />
-  </main>
+  <div class="app-contatiner">
+      <header>
+        <h1>Vue Weather Dashboard</h1>
+        <nav>
+          <RouterLink to="/">Home</RouterLink>
+          <RouterLink to="/about">About</RouterLink>
+        </nav>
+      </header>
+
+      <RouterView />
+    </div>
 </template>
 

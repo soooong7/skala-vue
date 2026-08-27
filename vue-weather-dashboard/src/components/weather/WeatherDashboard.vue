@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, watch, watchEffect } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import BaseDashboardCard from './BaseDashboardCard.vue'
 import SearchBar from './SearchBar.vue'
 import WeatherCard from './WeatherCard.vue'
@@ -12,6 +13,9 @@ const weatherList = ref([
 
 const searchQuery = ref('')
 const selectedCityInfo = ref('카드를 클릭하거나 검색해보세요.')
+
+const router = useRouter()
+const route = useRoute()
 
 const filteredWeatherList = computed(() => {
   const query = searchQuery.value.trim()
@@ -32,8 +36,8 @@ watchEffect(() => {
   console.log('[watchEffect] 검색어:', searchQuery.value)
 })
 
-function showDetail(cityId) {
-  window.alert(`${cityId} 상세 화면은 Router 단계에서 연결합니다.`)
+function goDetail(cityId) {
+  router.push({ name: 'WeatherDetail', params: { cityId } })
 }
 </script>
 
@@ -54,7 +58,7 @@ function showDetail(cityId) {
         :key="city.id"
         :city-item="city"
         @select-card="(message) => (selectedCityInfo = message)"
-        @click-detail="showDetail"
+        @click-detail="goDetail"
       />
       <p v-if="filteredWeatherList.length === 0">검색 결과가 없습니다.</p>
     </BaseDashboardCard>
