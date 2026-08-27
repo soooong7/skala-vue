@@ -20,10 +20,44 @@ const CITY_LIST = [
   { id: 'city_03', name: '부산', lat: 35.1796, lon: 129.0756 },
 ]
 
+const WEATHER_MAIN_LABELS = {
+  Clear: '맑음',
+  Clouds: '흐림',
+  Rain: '비',
+  Drizzle: '이슬비',
+  Thunderstorm: '뇌우',
+  Snow: '눈',
+  Mist: '안개',
+  Smoke: '연기',
+  Haze: '실안개',
+  Dust: '먼지',
+  Fog: '짙은 안개',
+  Sand: '모래바람',
+  Ash: '화산재',
+  Squall: '돌풍',
+  Tornado: '토네이도',
+}
+
 function assertApiKey() {
   if (!API_KEY) {
     throw new Error('VITE_OPENWEATHER_API_KEY가 설정되지 않았습니다. .env.local 파일을 확인하세요.')
   }
+}
+
+function normalizeWeatherLabel(main, description) {
+  // OpenWeather의 한국어 번역은 번역 품질 편차가 있으므로,
+  // 주요 날씨는 직접 표준화하고 세부 설명은 보조 정보로만 사용함
+  const normalizedDescription = String(description ?? '').replace(/\s+/g, '')
+
+  if (WEATHER_MAIN_LABELS[main]) {
+    return WEATHER_MAIN_LABELS[main]
+  }
+
+  if (normalizedDescription) {
+    return normalizedDescription
+  }
+
+  return '정보 없음'
 }
 
 // 단건 요청
@@ -45,11 +79,14 @@ async function requestWeather(city) {
 
 // 응답 정규화
 function normalizeWeather(city, data) {
+  const main = data.weather?.[0]?.main ?? ''
+  const description = data.weather?.[0]?.description ?? ''
+
   return {
     id: city.id,
     name: city.name,
     temp: data.main.temp,
-    status: data.weather?.[0]?.description ?? '정보 없음',
+    status: normalizeWeatherLabel(main, description),
     icon: data.weather?.[0]?.icon ?? '',
     humidity: data.main.humidity,
     wind: data.wind.speed,
@@ -77,6 +114,9 @@ function formatForecastTime(timestamp) {
 }
 
 function normalizeForecastDay(city, item) {
+  const main = item.weather?.[0]?.main ?? ''
+  const description = item.weather?.[0]?.description ?? ''
+
   return {
     cityId: city.id,
     cityName: city.name,
@@ -85,7 +125,7 @@ function normalizeForecastDay(city, item) {
     timeLabel: formatForecastTime(item.dt),
     temp: item.main.temp,
     feelsLike: item.main.feels_like,
-    status: item.weather?.[0]?.description ?? '정보 없음',
+    status: normalizeWeatherLabel(main, description),
     icon: item.weather?.[0]?.icon ?? '',
     humidity: item.main.humidity,
     wind: item.wind.speed,
@@ -94,6 +134,9 @@ function normalizeForecastDay(city, item) {
 }
 
 function normalizeForecastHour(city, item) {
+  const main = item.weather?.[0]?.main ?? ''
+  const description = item.weather?.[0]?.description ?? ''
+
   return {
     cityId: city.id,
     cityName: city.name,
@@ -102,7 +145,7 @@ function normalizeForecastHour(city, item) {
     timeLabel: formatForecastTime(item.dt),
     temp: item.main.temp,
     feelsLike: item.main.feels_like,
-    status: item.weather?.[0]?.description ?? '정보 없음',
+    status: normalizeWeatherLabel(main, description),
     icon: item.weather?.[0]?.icon ?? '',
     humidity: item.main.humidity,
     wind: item.wind.speed,
