@@ -7,6 +7,7 @@ import {
   fetchWeatherForecast,
   getWeatherIconUrl,
 } from '@/services/weatherApi'
+import AiWeatherAssistant from '@/components/weather/AiWeatherAssistant.vue'
 import { useTemperature } from '@/composables/useTemperature'
 import { useConfigStore } from '@/stores/configStore'
 
@@ -198,6 +199,8 @@ watch(
           <span class="meta-chip">단위 {{ unitSymbol }}</span>
         </div>
       </article>
+
+      <AiWeatherAssistant :weather-data="cityData" />
 
       <section class="forecast-section">
         <div class="forecast-section__head">
