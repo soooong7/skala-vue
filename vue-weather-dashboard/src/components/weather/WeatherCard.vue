@@ -1,4 +1,6 @@
 <script setup>
+import { useTemperature } from '@/composables/useTemperature'
+
 const props = defineProps({
   cityItem: {
     type: Object,
@@ -7,6 +9,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['select-card', 'click-detail'])
+
+// 부모가 넘겨준 섭씨 값을 Composable에 전달
+const { displayTemp, unitSymbol } = useTemperature(() => props.cityItem.temp)
 </script>
 
 <template>
@@ -15,7 +20,7 @@ const emit = defineEmits(['select-card', 'click-detail'])
     @click="emit('select-card', `${props.cityItem.name}이 선택되었습니다.`)"
   >
     <h3>{{ props.cityItem.name }}</h3>
-    <p>현재 기온: {{ props.cityItem.temp }}</p>
+    <p>현재 기온: {{ displayTemp }}{{ unitSymbol }}</p>
     <p>날씨 : {{ props.cityItem.status }}</p>
 
     <span v-if="props.cityItem.temp >= 25" class="weather-hot">🔥 더움 (25도 이상)</span>
