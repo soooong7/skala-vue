@@ -2,35 +2,55 @@
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  background: linear-gradient(180deg, #f6f8fc 0%, #eef3f9 100%);
-  color: #303133;
-  font-family: Arial, 'Noto Sans KR', sans-serif;
+html {
+  min-height: 100%;
 }
 
-.app-container {
-  width: min(900px, calc(100% - 40px));
-  margin: 36px auto;
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(191, 219, 254, 0.58), transparent 32%),
+    radial-gradient(circle at top right, rgba(221, 214, 254, 0.26), transparent 28%),
+    linear-gradient(180deg, #eef6ff 0%, #f8fbff 45%, #ffffff 100%);
+  color: #0f172a;
+  font-family: Inter, 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+}
+
+body,
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select,
+textarea {
+  outline: none;
+}
+
+#app {
+  min-height: 100vh;
 }
 
 .dashboard-wrapper section {
-  margin-bottom: 16px;
-  padding: 20px;
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.88);
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
-  backdrop-filter: blur(6px);
+  margin-bottom: 18px;
 }
 
 .weather-card {
-  margin: 12px 0;
-  padding: 16px;
+  margin: 14px 0;
+  padding: 18px;
   border: 1px solid rgba(148, 163, 184, 0.18);
-  border-radius: 16px;
-  background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 249, 252, 0.98));
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
 }
 
 .weather-card-top {
@@ -72,8 +92,11 @@ body {
 }
 
 .status-bar {
-  padding: 12px;
-  border-radius: 14px;
-  background: #f0f9eb;
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.86);
+  color: #334155;
   text-align: center;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
 }
